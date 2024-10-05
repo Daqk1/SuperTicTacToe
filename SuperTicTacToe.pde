@@ -16,30 +16,29 @@ public void setup() {
   createBoard();
 }
 public void draw() {
-    n2[validNumber].checkWin();
+    background(255); // Clear the background for redrawing
+    createBoard(); // Redraw the board
+    
     for (int i = 0; i < 9; i++) {
         n2[i].checkWin();
-        if (n2[i].getVictory() == true) {
-            n2[i].whoWon();
-            n2[i].setValid(false);
-        }
     }
-    checkTileWin();
-    updateColorsAndText();
-    if(returnwhat != -1) {
-        n2[returnwhat].checkWin();
-    }
-    if(gameVictory != 0) {
+    
+    checkTileWin(); // This checks the overall game victory
+    updateColorsAndText(); // Update colors and text after checking wins
+    
+    // Display the winner message if game is over
+    if (gameVictory != 0) {
         textSize(50);
         fill(0, 408, 612);
-        if(gameVictory % 2 == 0) {
+        if (gameVictory % 2 == 0) {
             text("Player 2 Wins", 150, 850);
         } else {
             text("Player 1 Wins", 150, 850);
         }
-        stop();
+        noLoop(); // Stop the draw loop once game is over
     }
 }
+
 
 public void updateColorsAndText() {
   for (int i = 0; i < 9; i++) {
@@ -140,15 +139,19 @@ public void mousePressed() {
     returnwhat = -1;
   }
 }
- public void checkTileWin() {
-    checkWinTileRow(0, 1, 2);
-    checkWinTileRow(3, 4, 5);
-    checkWinTileRow(6, 7, 8);
-    checkWinTileRow(0, 3, 6);
-    checkWinTileRow(1, 4, 7);
-    checkWinTileRow(2, 5, 8);
-    checkWinTileRow(0, 4, 8);
-    checkWinTileRow(2, 4, 6);
+ public void checkWin() {
+    checkWinRow(0, 1, 2);
+    checkWinRow(3, 4, 5);
+    checkWinRow(6, 7, 8);
+    checkWinRow(0, 3, 6);
+    checkWinRow(1, 4, 7);
+    checkWinRow(2, 5, 8);
+    checkWinRow(0, 4, 8);
+    checkWinRow(2, 4, 6);
+    
+    if (victory) {
+        whoWon(); // Ensure to call this after determining victory
+    }
 }
 
 private void checkWinTileRow(int a, int b, int c) {
