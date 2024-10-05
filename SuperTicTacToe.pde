@@ -314,12 +314,8 @@ private void checkWinRow(int a, int b, int c) {
             n1[a].setClicked(n); 
             n1[a].setValidFalse(); 
             checkWin();
-            if (victory) {
-                whoWon(); 
-                return; 
-            }
             validNumber = a; 
-            return; // Exit after handling the valid move
+            return; 
         }
     }
 }
