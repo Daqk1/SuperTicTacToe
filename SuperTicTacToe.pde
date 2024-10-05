@@ -41,7 +41,6 @@ public void draw() {
     }
 }
 
-
 public void updateColorsAndText() {
   for (int i = 0; i < 9; i++) {
     n2[i].texts();
@@ -58,6 +57,7 @@ public void updateColorsAndText() {
     }
   }
 }
+
 
 public void createBoard() {
   int sizeDifferenceX = 0;
@@ -140,16 +140,15 @@ public void mousePressed() {
     returnwhat = -1;
   }
 }
- public void checkWin() {
-    checkWinRow(0, 1, 2);
-    checkWinRow(3, 4, 5);
-    checkWinRow(6, 7, 8);
-    checkWinRow(0, 3, 6);
-    checkWinRow(1, 4, 7);
-    checkWinRow(2, 5, 8);
-    checkWinRow(0, 4, 8);
-    checkWinRow(2, 4, 6);
-    
+ public void checkTileWin() {
+    checkWinTileRow(0, 1, 2);
+    checkWinTileRow(3, 4, 5);
+    checkWinTileRow(6, 7, 8);
+    checkWinTileRow(0, 3, 6);
+    checkWinTileRow(1, 4, 7);
+    checkWinTileRow(2, 5, 8);
+    checkWinTileRow(0, 4, 8);
+    checkWinTileRow(2, 4, 6);
 }
 
 private void checkWinTileRow(int a, int b, int c) {
