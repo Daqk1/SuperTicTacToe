@@ -134,7 +134,6 @@ public void hitbox() {
 
 public void mousePressed() {
   hitbox();
-  System.out.println(returnwhat);
   if (returnwhat != -1) {
     n2[returnwhat].checker(mouseX, mouseY);
   
