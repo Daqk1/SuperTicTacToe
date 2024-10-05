@@ -1,4 +1,4 @@
-int n = 0;
+int turnCounter = 0; // Replaces global int n
 int turnNumber = 0;
 int locationX = 10;
 int locationY = 10;
@@ -16,47 +16,51 @@ public void setup() {
   createBoard();
 }
 public void draw() {
-    n2[validNumber].checkWin();
-    for (int i = 0; i < 9; i++) {
-        n2[i].checkWin();
-        if (n2[i].getVictory() == true) {
-            n2[i].whoWon();
-            n2[i].setValid(false);
+    if (!gameOver) {
+        n2[validNumber].checkWin();
+        for (int i = 0; i < 9; i++) {
+            n2[i].checkWin();
+            if (n2[i].getVictory() == true) {
+                n2[i].whoWon();
+                n2[i].setValid(false);
+            }
         }
-    }
-    checkTileWin();
-    updateColorsAndText();
-    if(returnwhat != -1) {
-        n2[returnwhat].checkWin();
-    }
-    if(gameVictory != 0) {
-        textSize(50);
-        fill(0, 408, 612);
-        if(gameVictory % 2 == 0) {
-            text("Player 2 Wins", 150, 850);
-        } else {
-            text("Player 1 Wins", 150, 850);
+        checkTileWin();
+        updateColorsAndText();
+        if(returnwhat != -1) {
+            n2[returnwhat].checkWin();
         }
-        stop();
+        if(gameVictory != 0) {
+            displayWinner();
+            stop();
+        }
     }
 }
 
-public void updateColorsAndText() {
-  for (int i = 0; i < 9; i++) {
-    n2[i].texts();
-    if (validNumber == n2[i].getNumber() && !temp.contains(i)) {
-      n2[i].setColor(0, 408, 612);
-    } else if (temp.contains(validNumber)) {
-      if (!temp.contains(i)) {
-        n2[i].setColor(0, 408, 612);
-      } else {
-        n2[i].setColor(0, 0, 0);
-      }
+public void displayWinner() {
+    textSize(50);
+    fill(0, 408, 612);
+    if (gameVictory % 2 == 0) {
+        text("Player 2 Wins", 150, 850);
     } else {
-      n2[i].setColor(0, 0, 0);
+        text("Player 1 Wins", 150, 850);
     }
-  }
 }
+
+
+public void updateColorsAndText() {
+    for (int i = 0; i < 9; i++) {
+        n2[i].texts();
+        if (validNumber == n2[i].getNumber() && !temp.contains(i)) {
+            n2[i].setColor(0, 408, 612);  // Set blue for valid moves
+        } else if (temp.contains(i)) {
+            n2[i].setColor(0, 0, 0);  // Set black for completed boards
+        } else {
+            n2[i].setColor(0, 0, 0);  // Default color for inactive boards
+        }
+    }
+}
+
 
 
 public void createBoard() {
@@ -89,17 +93,22 @@ public void createBoard() {
 }
 
 public void x(int x, int y) {
-  stroke(10);
-  fill(255);
-  line(x + 10, y + 10, x+55, y+55);
-  line(x + 10, y+55, x+55, y+10);
+    if (x >= 0 && y >= 0) { // Adding bounds check
+        stroke(10);
+        fill(255);
+        line(x + 10, y + 10, x + 55, y + 55);
+        line(x + 10, y + 55, x + 55, y + 10);
+    }
 }
 
 public void o(int x, int y, int w, int h) {
-  stroke(10);
-  fill(255);
-  ellipse(x+30, y +35, w, h);
+    if (x >= 0 && y >= 0) { // Adding bounds check
+        stroke(10);
+        fill(255);
+        ellipse(x + 30, y + 35, w, h);
+    }
 }
+
 public void biggerX(int x, int y) {
   stroke(40);
   line(x- 65, y-60, x+125, y+125);
@@ -108,52 +117,54 @@ public void biggerX(int x, int y) {
 
 public void hitbox() {
   for (int i = 0; i < 9; i++) {
-    if (validNumber == i && !temp.contains(i)) {
-      // Check if the mouse is pressed within the bounds of the current board
-      if (mousePressed && mouseX > n2[i].getClickSpaceX0(0) && mouseX < n2[i].getClickSpaceX3(8) && mouseY > n2[i].getClickSpaceY0(0) && mouseY < n2[i].getClickSpaceY3(8)) {
+if (validNumber == i && !temp.contains(i)) {
+    if (mousePressed && mouseX > n2[i].getClickSpaceX0(0) && mouseX < n2[i].getClickSpaceX3(8) && mouseY > n2[i].getClickSpaceY0(0) && mouseY < n2[i].getClickSpaceY3(8)) {
         returnwhat = i;
-        validNumber = i;
         break;
-      }
     }
+}
+
   }
   // If the selected board is completed, allow free access to any other non-completed board
   if (temp.contains(validNumber)) {
     for (int i = 0; i < 9; i++) {
-      
-      if (!temp.contains(i)) {
-        if (mousePressed && mouseX > n2[i].getClickSpaceX0(0) && mouseX < n2[i].getClickSpaceX3(8) && mouseY > n2[i].getClickSpaceY0(0) && mouseY < n2[i].getClickSpaceY3(8)) {
-          returnwhat = i;
-          validNumber = i;
-          break;
+        if (!temp.contains(i)) {
+            if (mousePressed && mouseX > n2[i].getClickSpaceX0(0) && mouseX < n2[i].getClickSpaceX3(8) && mouseY > n2[i].getClickSpaceY0(0) && mouseY < n2[i].getClickSpaceY3(8)) {
+                returnwhat = i;
+                validNumber = i; // Allow only free boards to become validNumber
+                break;
+            }
         }
-      }
     }
-  }
+}
+
 }
 
 public void mousePressed() {
-  hitbox();
-  if (returnwhat != -1) {
-    n2[returnwhat].checker(mouseX, mouseY);
-  
-    returnwhat = -1;
-  }
+    hitbox();
+    if (returnwhat != -1) {
+        n2[returnwhat].checker(mouseX, mouseY);
+        returnwhat = -1; 
+    }
 }
- public void checkTileWin() {
-    checkWinTileRow(0, 1, 2);
-    checkWinTileRow(3, 4, 5);
-    checkWinTileRow(6, 7, 8);
-    checkWinTileRow(0, 3, 6);
-    checkWinTileRow(1, 4, 7);
-    checkWinTileRow(2, 5, 8);
-    checkWinTileRow(0, 4, 8);
-    checkWinTileRow(2, 4, 6);
+
+public void checkTileWin() {
+    if (!gameOver) {
+        checkWinTileRow(0, 1, 2);
+        checkWinTileRow(3, 4, 5);
+        checkWinTileRow(6, 7, 8);
+        checkWinTileRow(0, 3, 6);
+        checkWinTileRow(1, 4, 7);
+        checkWinTileRow(2, 5, 8);
+        checkWinTileRow(0, 4, 8);
+        checkWinTileRow(2, 4, 6);
+    }
 }
 
 public void checkWinTileRow(int a, int b, int c) {
     if (n2[a].getWhoWon() != -1 && n2[a].getWhoWon() == n2[b].getWhoWon() && n2[b].getWhoWon() == n2[c].getWhoWon()) {
         gameVictory = n2[a].getWhoWon();
+        gameOver = true; 
     }
 }
 
@@ -308,9 +319,9 @@ private void checkWinRow(int a, int b, int c) {
   public void checker(int i, int j) {
     for (int a = 0; a < 9; a++) {
       if (i > n1[a].getClickSpaceX() && i < n1[a].getClickSpaceX2() && j > n1[a].getClickSpaceY() && j < n1[a].getClickSpaceY2() && validNumber == number && n1[a].getValid()) {
-        n1[a].changeSquare(n);
-        n += 1;
-        n1[a].setClicked(n);
+        n1[a].changeSquare(turnCounter);
+        turnCounter += 1;
+        n1[a].setClicked(turnCounter);
         n1[a].setValidFalse();
         checkWin();
         validNumber = a; // Update validNumber based on the current player's turn
