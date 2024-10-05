@@ -308,17 +308,22 @@ private void checkWinRow(int a, int b, int c) {
   }
   public void checker(int i, int j) {
     for (int a = 0; a < 9; a++) {
-      if (i > n1[a].getClickSpaceX() && i < n1[a].getClickSpaceX2() && j > n1[a].getClickSpaceY() && j < n1[a].getClickSpaceY2() && validNumber == number && n1[a].getValid()) {
-        n1[a].changeSquare(n);
-        n += 1;
-        n1[a].setClicked(n);
-        n1[a].setValidFalse();
-        checkWin();
-        validNumber = a; // Update validNumber based on the current player's turn
-      }
+        if (i > n1[a].getClickSpaceX() && i < n1[a].getClickSpaceX2() && j > n1[a].getClickSpaceY() && j < n1[a].getClickSpaceY2() && validNumber == number && n1[a].getValid()) {
+            n1[a].changeSquare(n);
+            n += 1;
+            n1[a].setClicked(n); 
+            n1[a].setValidFalse(); 
+            checkWin();
+            if (victory) {
+                whoWon(); 
+                return; 
+            }
+            validNumber = a; 
+            return; // Exit after handling the valid move
+        }
     }
-  }
-  public void whoWon(){
+}
+lic void whoWon(){
     if (whoWon == 1) {
         o(n1[4].getClickSpaceX(), n1[4].getClickSpaceY(), 200, 200);
         temp.add(number);
