@@ -315,7 +315,6 @@ private void checkWinRow(int a, int b, int c) {
         n1[a].setValidFalse();
         checkWin();
         validNumber = a; // Update validNumber based on the current player's turn
-        return; // Exit the loop once a valid move is made
       }
     }
   }
