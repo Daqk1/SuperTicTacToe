@@ -151,11 +151,12 @@ public void mousePressed() {
     checkWinTileRow(2, 4, 6);
 }
 
-private void checkWinTileRow(int a, int b, int c) {
+public void checkWinTileRow(int a, int b, int c) {
     if (n2[a].getWhoWon() != -1 && n2[a].getWhoWon() == n2[b].getWhoWon() && n2[b].getWhoWon() == n2[c].getWhoWon()) {
         gameVictory = n2[a].getWhoWon();
     }
 }
+
 
 public class tttButton {
   private int clicked;
